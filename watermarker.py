@@ -3,169 +3,85 @@ import numpy as np
 import math
 
 im = Image.open("owl.jpg")
-arr = np.array(im)
-edited = arr
+edited = np.array(im)
+copy = edited
 
+# Watermarker App
 
-# Make the image black
+m = len(edited)-1            # Number of rows
+n = len(edited[0])-1         # Number of Columns
 
-m = len(edited)
-n = len(edited[0])
+print("This image has {} rows and {} columns. ".format(m,n))
+quarter_row=math.floor(m/4)
+quarter_col=math.floor(n/4)
 
-for i in range(0,m):
-	for j in range(0,n):
-		edited[i,j]=[0,0,0]
-
-q1=int(math.floor(m/7))
-q2=int(math.floor(n/7))
-
-# Spell out my name in the image
-# First part of the W
-for i in range(0,q1):
-	for j in range(0,q2):
-		if (i==j):
-			edited[i,j]=[255,255,255]
-
-i=q1
-j=q2
-
-# Spell out the second part of the W
-for k in range(0,q2):
-	edited[i,j]=[255,255,255]
-	i=i-1
-	j=j+1
-
-# Spell out the third part of the W. The starting position will be [0,2*q1]
-for k in range(0,q2):
-	edited[i,j]=[255,255,255]
-
-	i=i+1
-	j=j+1
-
-i=q1
-j=3*q2
-
-# Spell out the fourth part of the W. The starting position will be [0,3*q1]
-for k in range(0,q2):
-	edited[i,j]=[255,255,255]
-	i=i-1
-	j=j+1
-
-
-for k in range(0,q2):
-	edited[k,4*q2+10]=[255,255,255]
-
-for k in range(0,q2):
-	edited[0,4*q2+10+k]=[255,255,255]
-	edited[(math.floor(1.5*q2/3)),4*q2+10+k]=[255,255,255]
-	edited[(q2),4*q2+10+k]=[255,255,255]
-
-for k in range(0,q2):
-	edited[3,m-3-k]=[255,255,255]
-	edited[(math.floor(1.5*q2/3)),m-3-k]=[255,255,255]
-	edited[q2,m-3-k]=[255,255,255]
-
-for k in range(0,int(math.floor(q2/2))-2):
-	edited[k+3,1+6*q1]=[255,255,255]
-
-for k in range(0,int(math.floor(q2/2))):
-	edited[math.floor(q2/2)+k+1,m-3]=[255,255,255]
-
-
-Image.fromarray(edited).show()
-
-
-'''
-# Make the image white
-
-for i in range(0,len(edited)):
-	for j in range(0,len(edited[0])):
-		edited[i,j]=[255,255,255]
-
-# Make the image grey
-
-for i in range(0,len(edited)):
-	for j in range(0,len(edited[0])):
-		edited[i,j]=[255,255,255]
-white = Image.fromarray(edited)
-# white.show()
-
-for i in range(0,len(edited)):
-	for j in range(0,len(edited[0])):
-		edited[i,j]=[128,128,128]
-gray = Image.fromarray(edited)
-# gray.show()
-
-for i in range(0,len(edited)):
-	for j in range(0,len(edited[0])):
-		if (i%2==0):
-			edited[i,j]=[0,0,0]
-		else:
-			edited[i,j]=[255,255,255]
-
-striped = Image.fromarray(edited)
-# striped.show()
-
-
-for i in range(0,len(edited)):
-	for j in range(0,len(edited[0])):
-		if (i%2==0 and j%2==0):
-			edited[i,j]=[0,0,0]
-		else:
-			edited[i,j]=[255,255,255]
-
-dotted = Image.fromarray(edited)
-# dotted.show()
+edited[276,69]=[255,255,255]
+edited[66,279]=[255,255,255]
 
 
 
 
-# Trippy pattern, Diagnol iteration
+for k in range(1,4*m):          # We will transverse the number of rows 4 times. (Up and down 4 times, W)
 
-m = len(edited) - 1    # Number of rows 
-n = len(edited[0]) - 1 # Numbers of columns 
+	if (k <= m):    # First part of the W, this will take m iterations
 
-for k in range(0,m):
-	if (k%2==0):	
-		i=k
-		j=0
-		while (i >=0 ):
-			edited[i,j]=[i,j,i^j]
-			i = i - 1
-			j = j+1
+		while()
 
-for k in range(0,n):
-	if (k%2==0):
-		i=m
-		j=k
-		while(j < n):
-			edited[i,j]=[i,j,i^j]
+		copy[i][j] = [255,255,255]
+
+		if (j%4==0):
+			j=j+1
+		i=i+1
+		print(i,j)
+
+		#for z in range(0,2):
+			#copy[i][j][z] = 255
+			#(edited[i][j][z]+edited[i+1][j][z]+edited[i-1][j][z]+edited[i][j+1][z]+edited[i][j-1][z]+edited[i-1][j-1][z]+edited[i+1][j+1][z]+edited[i+1][j-1][z]+edited[i-1][j+1][z])/9
+		
+
+
+Image.fromarray(copy).show()
+
+"""
+	elif (quarter_col < k <= 2*quarter_col):			# Second part of the W, another m iterations
+
+		i = m-1
+		j = quarter_col
+
+		while i > 0:
+		# Decrease the number of rows, increase the number of columns 
+
+			for z in range(0,2):
+				print(i,j)
+				copy[i][j][z] = (edited[i][j][z]+edited[i+1][j][z]+edited[i-1][j][z]+edited[i][j+1][z]+edited[i][j-1][z]+edited[i-1][j-1][z]+edited[i+1][j+1][z]+edited[i+1][j-1][z]+edited[i-1][j+1][z])/9
+
 			i=i-1
 			j=j+1
 
 
-for k in range(0,n):
-	if (k%5==0):	
-		i=k
-		j=0
-		while (i >=0 ):
-			edited[i,j]=[i^j,j^i^j,i^j^k]
-			i = i - 1
-			j = j+1
+
+		
+	elif (2*quarter_col < k <= 3*quarter_col):		# Third part of the W, "" "" iterations
+		pass
+
+	elif (3*quarter_col < k < n):						# Final part of the W, "" "" iterations
+		pass
+
+"""
 
 
 
-# Let's try out an image blurring, where we map each pixel to the average of it's surrounding pixels.
 
-for i in range(1,len(edited)):
-	for j in range(1,len(edited[0])):
-		edited[i,j]=[[edited[i+1][j]+edited[i-1][j]+edited[i][j+1]+edited[i][j-1]+edited[i+1][j+1]+edited[j-1][j-1]+edited[j+1][i-1]+edited[j-1][i+1],
-		[edited[i+1][j]+edited[i-1][j]+edited[i][j+1]+edited[i][j-1]+edited[i+1][j+1]+edited[j-1][j-1]+edited[j+1][i-1]+edited[j-1][i+1],
-		[edited[i+1][j]+edited[i-1][j]+edited[i][j+1]+edited[i][j-1]+edited[i+1][j+1]+edited[j-1][j-1]+edited[j+1][i-1]+edited[j-1][i+1]]
 
-av = Image.fromarray(edited)
-av.show()
-'''
+
+def averageFilter(filepath):
+	im = Image.open(filepath)
+	edited = np.array(im)
+	for index1 in range(1,m):
+		for index2 in range(1,n):
+			for i in range(0,2):
+				copy[index1][index2][i] = (edited[index1][index2][i]+edited[index1+1][index2][i]+edited[index1-1][index2][i]+edited[index1][index2+1][i]+edited[index1][index2-1][i]+edited[index1-1][index2-1][i]+edited[index1+1][index2+1][i]+edited[index1+1][index2-1][i]+edited[index1-1][index2+1][i])/9
+
 
 
 
