@@ -11,76 +11,82 @@ copy = edited
 m = len(edited)-1            # Number of rows
 n = len(edited[0])-1         # Number of Columns
 
-print("This image has {} rows and {} columns. ".format(m,n))
+thickness = int(math.floor(n/4))
+
+
+# print("This image has {} rows and {} columns. ".format(m,n))
+
 quarter_row=math.floor(m/4)
 quarter_col=math.floor(n/4)
 
-edited[276,69]=[255,255,255]
-edited[66,279]=[255,255,255]
 
 
 
 
-for k in range(1,4*m):          # We will transverse the number of rows 4 times. (Up and down 4 times, W)
+for byfour in range(1,thickness):
 
-	if (k <= m):    # First part of the W, this will take m iterations
+	for k in range(1,4*m):          # We will transverse all of the rows.
 
-		while()
+		# print("k is {} byfour is {}".format(k,byfour))
 
-		copy[i][j] = [255,255,255]
+		if (k <= m - 1):
 
-		if (j%4==0):
-			j=j+1
-		i=i+1
-		print(i,j)
+			for z in range(0,3):
+				x = (float(edited[k][byfour][z])+float(edited[k+1][byfour][z])+float(edited[k-1][byfour][z])+float(edited[k][byfour+1][z])+float(edited[k][byfour-1][z])+float(edited[k-1][byfour-1][z])+float(edited[k+1][byfour+1][z])+float(edited[k+1][byfour-1][z])+float(edited[k-1][byfour+1][z]))/9
+				x = math.floor(x)
+				copy[k][byfour][z] = x
 
-		#for z in range(0,2):
-			#copy[i][j][z] = 255
-			#(edited[i][j][z]+edited[i+1][j][z]+edited[i-1][j][z]+edited[i][j+1][z]+edited[i][j-1][z]+edited[i-1][j-1][z]+edited[i+1][j+1][z]+edited[i+1][j-1][z]+edited[i-1][j+1][z])/9
-		
+			if(k%4==0):
+				byfour=byfour+1
+
+
+#print(edited[1][1],edited[2][1],edited[0][1],edited[1][2],edited[1][0],edited[0][0],edited[2][2],edited[2][0],edited[0][2])
+print(edited[1][1])
+print((float(edited[1][1][0])+float(edited[2][1][0])+float(edited[0][1][0])+float(edited[1][2][0])+float(edited[1][0][0])+float(edited[0][0][0])+float(edited[2][2][0])+float(edited[2][0][0])+float(edited[0][2][0]))/9)
+print((float(edited[1][1][1])+float(edited[2][1][1])+float(edited[0][1][1])+float(edited[1][2][1])+float(edited[1][0][1])+float(edited[0][0][1])+float(edited[2][2][1])+float(edited[2][0][1])+float(edited[0][2][1]))/9)
+print((float(edited[1][1][2])+float(edited[2][1][2])+float(edited[0][1][2])+float(edited[1][2][2])+float(edited[1][0][2])+float(edited[0][0][2])+float(edited[2][2][2])+float(edited[2][0][2])+float(edited[0][2][2]))/9)
 
 
 Image.fromarray(copy).show()
 
-"""
-	elif (quarter_col < k <= 2*quarter_col):			# Second part of the W, another m iterations
 
-		i = m-1
+
+"""
+	if (m<k<=2*k):
+		i = m
 		j = quarter_col
-
-		while i > 0:
-		# Decrease the number of rows, increase the number of columns 
-
-			for z in range(0,2):
-				print(i,j)
-				copy[i][j][z] = (edited[i][j][z]+edited[i+1][j][z]+edited[i-1][j][z]+edited[i][j+1][z]+edited[i][j-1][z]+edited[i-1][j-1][z]+edited[i+1][j+1][z]+edited[i+1][j-1][z]+edited[i-1][j+1][z])/9
-
-			i=i-1
-			j=j+1
-
-
-
 		
-	elif (2*quarter_col < k <= 3*quarter_col):		# Third part of the W, "" "" iterations
-		pass
-
-	elif (3*quarter_col < k < n):						# Final part of the W, "" "" iterations
-		pass
-
-"""
+		while ( i>=0 ):
+				copy[i][j] = [255,255,255]
+				if(i%4==0):
+					j=j+1
+				i=i-1
 
 
+	if (2*m < k <= 3*k):
+		i = 0
+		j = 2*quarter_col
+		while ( i<=m ):
+				copy[i][j] = [255,255,255]
+
+				if(i%4==0):
+					j=j+1
+
+				i=i+1
 
 
+	if (3*m < k <= 4*m):
+		i = m
+		j = 3*quarter_col
 
+		while ( i>= 0 ):
+				copy[i][j] = [255,255,255]
 
-def averageFilter(filepath):
-	im = Image.open(filepath)
-	edited = np.array(im)
-	for index1 in range(1,m):
-		for index2 in range(1,n):
-			for i in range(0,2):
-				copy[index1][index2][i] = (edited[index1][index2][i]+edited[index1+1][index2][i]+edited[index1-1][index2][i]+edited[index1][index2+1][i]+edited[index1][index2-1][i]+edited[index1-1][index2-1][i]+edited[index1+1][index2+1][i]+edited[index1+1][index2-1][i]+edited[index1-1][index2+1][i])/9
+				if(i%4==0):
+					j=j+1
+				i=i-1
+
+		"""
 
 
 
