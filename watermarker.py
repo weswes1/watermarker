@@ -1,88 +1,53 @@
+														
+
+															# Watermarker App
+
+															# Import modules
+
 from PIL import Image
 import numpy as np
 import math
-														# Watermarker App
 
-copy = np.array(Image.open("owl.jpg"),dtype='int64')
+															# Open the image and store it as a numpy array, make a copy of the image
+im = Image.open("owl.jpg")
+edited = np.array(im)
+copy = edited
 
-
-
-m = float(len(copy)-1)     		 	# Number of Rows
-n = float(len(copy[0])-1)        		# Number of Columns
-
-
-
-copy[m,n]=[255,255,255]
-
-# print("This image has {} rows and {} columns. ".format(m,n))
-
-thickness = round(n/16)		# Thickness of W 
-rowtocol = round(float(m/n))		# Row to column ratio
-# print(rowtocol)
-slopeLine = round(4*rowtocol)			# Line of slope joining the (0,m) pixel to the (0,n/4) pixel
-# print(slopeLine)
-
-quarter_row=math.floor(m/4)
-quarter_col=math.floor(n/4)
+													
+m = float(len(edited)-1)       		 						# Number of Rows
+n = float(len(edited[0])-1)     		 					# Number of Columns
+rowtoCol = round(m/n)									    # Row to Column ratio
+slopeLine = 4*rowtoCol										# Slope of the line
+quartercol = round(n/4)										# A quarter of the total number of columns
+thickness = round(n/16)										# Thickness of the W
 
 
+print("Number of rows: {} number of columns: {} Row to Column ratio: {} slopeLine: {}".format(m,n,rowtoCol,slopeLine))
 
 
-for k in range(0,int(4*m)):			# We will traverse the total number of rows four times
-	if (k < m):						# First section of the W
-		for byfour in range(0,int(thickness)):  # Controls the wide of the W by starting a new 1-pixel wide diagnal line adjacent to the previous, thickness number of times 
-			i=1
-			j=byfour
+col = 0
 
-			while (i < m):
-				for z in range(0,2):
-					copy[i][j][z] = (copy[i][j][z]+copy[i+1][j][z]+copy[i-1][j][z]+copy[i][j+1][z]+copy[i][j-1][z]+copy[i-1][j-1][z]+copy[i+1][j+1][z]+copy[i+1][j-1][z]+copy[i-1][j+1][z])/9
-				if(i%slopeLine==0):
-					j=j+1
-				i=i+1
+for row in range(0,int(m)):															# Transverse the total number of rows one time
+	for k in range(0,int(thickness)):
 
-	if (m < k <= 2*k):					# Second section of the W 
+		for rgbVAL in range(0,2):
+			edited[row][col+k][rgbVAL] = float((int(copy[row][col+k][rgbVAL])+int(copy[row-1][col+k][rgbVAL])+int(copy[row+1][col+k][rgbVAL])+int(copy[row][col+k+1][rgbVAL])+int(copy[row][col+k-1][rgbVAL])+int(copy[row-1][col+k-1][rgbVAL])+int(copy[row+1][col+k+1][rgbVAL])+int(copy[row+1][col+k-1][rgbVAL])+int(copy[row-1][col+k+1][rgbVAL]))*(1/9))		# Yellow
 
-		for byfour in range(0,int(thickness)):
-			i = m-1
-			j = quarter_col+byfour
+			#edited[row,col+2*quartercol-k+round(thickness/2)][rgbVAL]=[255,255,255] 			# White
 
-			while (0 < i < m):
-				for z in range(0,2):
-					copy[i][j][z] = (copy[i][j][z]+copy[i+1][j][z]+copy[i-1][j][z]+copy[i][j+1][z]+copy[i][j-1][z]+copy[i-1][j-1][z]+copy[i+1][j+1][z]+copy[i+1][j-1][z]+copy[i-1][j+1][z])/9
-				if(i%slopeLine==0):
-					j=j+1
-				i=i-1
+			#edited[m-row,col+quartercol+k-round(thickness/2)][rgbVAL]=[0,0,100]   				# Blue
 
-	if (2*m < k <= 3*k):				# Third section of the W
-
-		for byfour in range(0,int(thickness)):
-			i = 1
-			j = 2*quarter_col+byfour
-			while ( i < m ):
-				for z in range(0,2):
-					copy[i][j][z] = (copy[i][j][z]+copy[i+1][j][z]+copy[i-1][j][z]+copy[i][j+1][z]+copy[i][j-1][z]+copy[i-1][j-1][z]+copy[i+1][j+1][z]+copy[i+1][j-1][z]+copy[i-1][j+1][z])/9
-				if(i%slopeLine==0):
-					j=j+1
-				i=i+1
+			#edited[m-row,col+3*quartercol-k][rgbVAL]=[100,100,100] 							# Grey
 
 
-	if (3*m < k < 4*m):
-
-		for byfour in range(0,int(thickness)):
-			i = m-1
-			j = 3*quarter_col+byfour
-			while ( i > 0 and j < n):
-				for z in range(0,2):
-						copy[i][j][z] = (copy[i][j][z]+copy[i+1][j][z]+copy[i-1][j][z]+copy[i][j+1][z]+copy[i][j-1][z]+copy[i-1][j-1][z]+copy[i+1][j+1][z]+copy[i+1][j-1][z]+copy[i-1][j+1][z])/9
-				if(i%slopeLine==0):
-					j=j+1
-				i=i-1
+	if (row % slopeLine == 0):
+		col+=1
 
 
+	
 
-Image.fromarray(copy).show()
+	
 
 
-
+Image.fromarray(edited).show()
 
